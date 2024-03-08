@@ -1,3 +1,4 @@
+# please install relevant packages before running this script
 library(spdep)
 library(rgdal)
 library(ggplot2)
@@ -5,8 +6,21 @@ library(INLA)
 library(dplyr)
 library(raster)
 library(inlabru)
+
 # --- load raw data
-covidat<-read.csv("cases.csv")
+# please specify the directory where you save the raw data
+covidat2020<-read.csv("cases2020.csv")
+covidat2021_1<-read.csv("cases2021_1.csv")
+covidat2021_2<-read.csv("cases2021_2.csv")
+covidat2021_3<-read.csv("cases2021_3.csv")
+covidat2022<-read.csv("cases2022.csv")
+covidat<-rbind.data.frame(covidat2020,
+                          covidat2021_1,
+                          covidat2021_2,
+                          covidat2021_3,
+                          covidat2022
+)
+covidat<-covidat[rev(order(as.Date(covidat$date, format="%Y-%m-%d"))),]
 nbhoods<-data.frame(MSOA11CD=unique(covidat[,c("MSOA11CD")]))
 
 # --- load shapefile
