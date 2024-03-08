@@ -280,7 +280,10 @@ leaflet(data=sp.dat)%>% addTiles() %>%
               #opacity=1,
               fillOpacity = 1,
               stroke=FALSE) %>%
+  addPolylines(data=sp.dat[!sp.dat$OBJECTID%in%c(1:3000),],
+               color="grey",weight=0.5)%>%
   addScaleBar(position="bottomleft")%>%
   addLegend(pal = colours,values = sp.dat@data$mapp,opacity = 1,
             title="Cases")
+
 
