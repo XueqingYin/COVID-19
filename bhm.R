@@ -216,7 +216,7 @@ cmp <- cases ~ 0 + Intercept(1) + income + UER+
 
 inlabru.model<-bru(cmp, data = covid.dat, 
                    family = "poisson",
-                   E = covid19_data$Population,
+                   E = covid.dat$Population,
                    control.family = list(link = "log"),
                    options = list( 
                      verbose = TRUE,
