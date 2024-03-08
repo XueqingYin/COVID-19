@@ -224,3 +224,63 @@ inlabru.model<-bru(cmp, data = covid.dat,
                    )
 )
 
+
+
+# -------------------------------------------------------------------------
+# Map of the study region (Figure 1 (a))
+# -------------------------------------------------------------------------
+
+sp.dat@data$mapp<-0
+colours <- colorNumeric(palette = "grey", 
+                        domain = sp.dat@data$mapp, 
+                        reverse=FALSE)
+leaflet(data=sp.dat) %>%addTiles() %>%
+  addPolygons(fillColor = ~colours(mapp), 
+              fillOpacity = 0.4,stroke = FALSE,   # adjust the 'fillOpacity' value for transparancy 
+              smoothFactor = 0.001) %>%
+  addPolylines(data=sp.dat[!sp.dat$OBJECTID%in%c(1:3000),],
+               color="grey",weight=0.5)%>%
+  addScaleBar(position="bottomleft")
+
+
+
+# -------------------------------------------------------------------------
+# Cumulative number of COVID-19 infection cases at English MSOA level during the study period (Figure 2 (a))
+# continuous color scheme
+# -------------------------------------------------------------------------
+
+sum_risk_by_nb<- group_by(covid.dat@data,MSOA11CD) %>% summarize(
+  sum.risk = sum(cases))
+sp.dat@data$mapp<-sum_risk_by_nb$sum.risk
+colours <- colorNumeric(palette = "Reds", domain = sp.dat@data$mapp, reverse=FALSE)
+leaflet(data=sp.dat) %>% addTiles() %>%
+  addPolygons(fillColor = ~colours(mapp),   
+              smoothFactor = 0.1,
+              #opacity=1,
+              fillOpacity = 1,
+              stroke=FALSE) %>%
+  addPolylines(data=sp.dat[!sp.dat$OBJECTID%in%c(1:3000),],
+               color="grey",weight=0.5)%>%
+  addScaleBar(position="bottomleft")%>%
+  addLegend(pal = colours,values = sp.dat@data$mapp,opacity = 1,
+            title="Cases")
+
+
+# -------------------------------------------------------------------------
+# classification of the cumulative number of COVID-19 infection cases at English MSOA level during the study period (Figure 2 (a))
+# discrete color scheme
+# -------------------------------------------------------------------------
+sum_risk_by_nb<- group_by(covid.dat@data,MSOA11CD) %>% summarize(
+  sum.risk = sum(cases))
+sp.dat@data$mapp<-sum_risk_by_nb$sum.risk
+colours <- colorBin("OrRd", bins = c(0, 1000, 2000, 3000, 4000,5000,6000,7000))
+leaflet(data=sp.dat)%>% addTiles() %>%
+  addPolygons(fillColor = ~colours(mapp),   
+              smoothFactor = 0.1,
+              #opacity=1,
+              fillOpacity = 1,
+              stroke=FALSE) %>%
+  addScaleBar(position="bottomleft")%>%
+  addLegend(pal = colours,values = sp.dat@data$mapp,opacity = 1,
+            title="Cases")
+
