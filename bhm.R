@@ -273,7 +273,7 @@ leaflet(data=sp.dat) %>% addTiles() %>%
 sum_risk_by_nb<- group_by(covid.dat@data,MSOA11CD) %>% summarize(
   sum.risk = sum(cases))
 sp.dat@data$mapp<-sum_risk_by_nb$sum.risk
-colours <- colorBin("Reds", bins = c(0, 1200, 2400, 3600, 4800, 6000,7200))
+colours <- colorBin("Reds", domain = sp.dat@data$mapp, bins = 7)
 leaflet(data=sp.dat)%>% addTiles() %>%
   addPolygons(fillColor = ~colours(mapp),   
               smoothFactor = 0.1,
